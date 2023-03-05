@@ -1,91 +1,73 @@
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from './page.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+"use client"
+import Link from "next/link";
+import { useState } from "react";
+import { HiOutlineMail } from 'react-icons/hi'
+import { RiLockPasswordFill } from 'react-icons/ri'
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const session = useSession();
+  const router = useRouter();
+
+  if (session?.status === 'authenticated') {
+    router.push('/dashboard');
+  }
+  
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const login = async() => {
+    try {
+      const data = await signIn('credentials', {
+        redirect: false,
+        email, password
+      })
+
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleChange = (e, tipe) => {
+    if(tipe === 'email'){
+      setEmail(e.target.value)
+      return
+    }
+
+    setPassword(e.target.value)
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    login()
+  }
+
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="w-full h-screen -mt-16 flex flex-col items-center justify-center bg-violet-100">
+      <form className="w-96 h-96 border-2 rounded-2xl border-slate-600 shadow-lg p-10 md:w-[25rem] space-y-3 relative overflow-hidden bg-white flex flex-col justify-center" onSubmit={(e)=>handleSubmit(e)}>
+        <h1 className="text-center font-semibold text-4xl text-violet-700">Welcome.</h1>
+        <div className="w-full flex flex-col">
+          <p>Email</p>
+          <div className="w-full flex items-center justify-center gap-2">
+            <input type={'text'} id='email' name="email" className="w-full px-3 py-1 border-b duration-150 outline-none text-sm focus:translate-y-1 focus:text-lg focus:border-blue-400 focus:border-b-2" onChange={(e)=>handleChange(e, 'email')} />
+            <HiOutlineMail className="w-7 h-7" />
+          </div>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-        <div className={styles.thirteen}>
-          <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
+        <div className="w-full flex flex-col">
+          <p>Password</p>
+          <div className="w-full flex items-center justify-center gap-2">
+            <input type={'password'} id='password' name="password" className="w-full px-3 py-1 border-b duration-150 outline-none text-sm focus:translate-y-1 focus:text-lg focus:border-blue-400 focus:border-b-2" onChange={(e)=>handleChange(e, 'password')} />
+            <RiLockPasswordFill className="w-7 h-7" />
+          </div>
         </div>
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://beta.nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={inter.className}>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p className={inter.className}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+        <div className=" w-full flex flex-col justify-center items-center space-y-2">
+          <button className="w-full bg-blue-400 py-1 rounded-lg text-white font-semibold text-lg hover:bg-blue-600">Sign in</button>
+          <p>Belum mendaftar ? <Link href={"/register"} className="font-semibold text-blue-500 hover:text-blue-700">Daftar Sekarang.</Link></p>
+        </div>
+      </form>
     </main>
   )
 }
