@@ -5,6 +5,8 @@ import { FaSearch } from "react-icons/fa"
 import { FiRefreshCcw } from "react-icons/fi"
 import { MdAdd } from "react-icons/md"
 import ModalAddItems from "../components/ModalAddItems"
+import ModalConfirm from "../components/ModalConfirm"
+import ModalEditItem from "../components/ModalEditItem"
 
 export default function Items () {
     const [addItems, setAddItems] = useState({
@@ -21,6 +23,11 @@ export default function Items () {
     const [currentPage, setCurrentPage] = useState(1)
     const [itemsPerPage] = useState(15)
     const [isAddItem, setIsAddItem] = useState(false)
+    const [isDelete, setIsDelete] = useState(false)
+    const [isEdit, setIsEdit] = useState(false)
+    const [aksi, setAksi] = useState('')
+    const [getId, setGetId] = useState('')
+    const [ItemToEdit, setItemToEdit] = useState(null)
 
     const totalPages = Math.ceil(items.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
@@ -85,11 +92,54 @@ export default function Items () {
         })
     }
 
+    
+    const deleteItem = async() => {
+        const res = await fetch('/api/items/datahandler',{
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                idbarang: getId
+            })
+        })
+        const data = await res.json()
+        console.log(data)
+        setItems(prev=>prev.filter(data=>data.idbarang !== getId))
+        setGetId('')
+    }
+
     useEffect(()=>{
         getKategori()
         getItems()
+        setItems(prev=>prev.filter(data=>data.idbarang !== getId))
     }, [])
 
+    const handleClickConfirm = (e, idbarang) => {
+        setGetId(idbarang)
+        if(e?.target?.name === "delete" || e === "delete"){
+            setIsDelete(prev=>!prev)
+            setAksi('delete')
+        }
+    
+        if(e?.target?.name === "edit" || e === "edit"){
+            setIsEdit(prev=>!prev)
+            setAksi('edit')
+            setItemToEdit(items.find(data=>data.idbarang == idbarang))
+        }
+    }
+
+    const handleClickConfirmAction = (aksi) => {
+        if(aksi === "delete"){
+            deleteItem()
+            setIsDelete(prev=>!prev)
+        }
+
+        if(aksi === "edit"){
+            setIsEdit(prev=>!prev)
+        }
+    } 
+    console.log(ItemToEdit)
     const handlePageChange = (currentNumber) => {
         setCurrentPage(currentNumber)
     }
@@ -157,8 +207,8 @@ export default function Items () {
                 }
             })
         } else if(e.target.name === "kategori"){
-            const getMaxItemsInKategori = items.filter(data=>data.idkategori === e.target.value).length
-            const getKategoriName = listKategori.find(data=>data.idkategori == e.target.value)
+            const getMaxItemsInKategori = items?.filter(data=>data.idkategori === e.target.value).length
+            const getKategoriName = listKategori?.find(data=>data.idkategori == e.target.value)
             const getName = getKategoriName?.nm_kategori
             setAddItems(prev=>{
                 return {
@@ -170,6 +220,7 @@ export default function Items () {
             })
         }
     }
+
     return (
         <>
         {
@@ -181,6 +232,20 @@ export default function Items () {
             handleClickModalAddItem={handleClickModalAddItem}
             handleSubmitAddItem={handleSubmitAddItem}
             handleChangeAddItem={handleChangeAddItem} />
+        }
+        {
+            isDelete &&
+            <ModalConfirm
+            aksi={aksi}
+            handleChangeAddItem={handleChangeAddItem}
+            handleClickConfirm={handleClickConfirm}
+            handleClickConfirmAction={handleClickConfirmAction} />
+        }
+        {
+            isEdit &&
+            <ModalEditItem
+            ItemToEdit={ItemToEdit}
+            listKategori={listKategori} />
         }
 
         <section className="max-w-7xl mx-auto space-y-3">
@@ -195,7 +260,7 @@ export default function Items () {
                 </form>
             <button className="h-10 w-fit bg-violet-200 rounded-full border-2 border-violet-200 px-3 flex gap-1 items-center font-semibold group hover:w-36 hover:bg-violet-400 hover:duration-150 hover:border-violet-400" onClick={handleClickModalAddItem}><MdAdd className="w-6 h-6" /><span className="hidden w-36 group-hover:inline">Tambah Data</span></button>
             </div>
-            <table className="collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden py-10">
+            <table className="table-auto border-collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden">
             <thead className="w-full h-12 bg-slate-100 border-b">
                 <tr className="gap-5">
                     <th className="px-5">No</th>
@@ -208,22 +273,22 @@ export default function Items () {
                     <th className="px-5">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody className="">
                 {
-                items.map(item=>{
+                items.map((item, index)=>{
                     no = no + 1
                     return(
-                        <tr key={item.idbarang} className="leading-loose group py-10">
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-center">{no}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.idbarang}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.nm_barang}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-left">{formatter.format(item.hrg_modal)}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-left">{formatter.format(item.hrg_satuan)}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.stok}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.nm_kategori}</td>
-                            <td className="px-5 group-hover:bg-violet-200 group-hover:duration-150 text-center flex justify-center items-center gap-2">
-                                <button className="shadow-md rounded-lg bg-green-400 px-3">Edit</button>
-                                <button className="shadow-md rounded-lg bg-red-400 px-3">Delete</button>
+                        <tr key={item.idbarang} className={`leading-loose group ${index % 2 === 0 ? 'bg-violet-50' : ''} `}>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{no}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.idbarang}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.nm_barang}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{formatter.format(item.hrg_modal)}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{formatter.format(item.hrg_satuan)}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.stok}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.nm_kategori}</td>
+                            <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center flex justify-center items-center gap-2">
+                                <button className="shadow-md rounded-lg bg-green-400 px-3" name="edit" onClick={(e)=>handleClickConfirm(e,item.idbarang)}>Edit</button>
+                                <button className="shadow-md rounded-lg bg-red-400 px-3" name="delete" onClick={(e)=>handleClickConfirm(e, item.idbarang)}>Delete</button>
                             </td>
                         </tr>
                     ) 

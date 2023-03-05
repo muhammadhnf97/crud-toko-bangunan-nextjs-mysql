@@ -37,5 +37,16 @@ export default async function handler(req, res) {
             console.log(error)
         }
     }
+
+    if(req.method === "DELETE"){
+        const idbarang = req.body.idbarang
+        const query = 'DELETE from barang WHERE idbarang = ?'
+        const values = [idbarang]
+        const data = await dbconnect(query, values)
+        res.status(200).json({response: {
+            message: 'data berhasil dihapus',
+            data
+        }})
+    }
 }
   
