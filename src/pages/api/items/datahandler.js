@@ -48,5 +48,28 @@ export default async function handler(req, res) {
             data
         }})
     }
+
+    if(req.method === 'PUT'){
+        try {
+            const {idbarang, nm_barang, hrg_modal, hrg_satuan, stok, idkategori, nm_kategori} = req.body
+            const query = 'UPDATE barang SET nm_barang = ?, hrg_modal = ?, hrg_satuan = ?, stok = ?, idkategori = ? WHERE idbarang = ?'
+            const values = [nm_barang, hrg_modal, hrg_satuan, stok, idkategori,idbarang]
+            await dbconnect(query, values)
+            res.status(200).json({response:{
+                message: "Data berhasil disimpan",
+                returnData: {
+                    idbarang: idbarang,
+                    nm_barang: nm_barang,
+                    hrg_modal: hrg_modal,
+                    hrg_satuan: hrg_satuan,
+                    stok: stok,
+                    idkategori: idkategori,
+                    nm_kategori: nm_kategori
+                }
+            }})
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
   

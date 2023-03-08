@@ -6,7 +6,6 @@ import { FiRefreshCcw } from "react-icons/fi"
 import { MdAdd } from "react-icons/md"
 import ModalAddItems from "../components/ModalAddItems"
 import ModalConfirm from "../components/ModalConfirm"
-import ModalEditItem from "../components/ModalEditItem"
 
 export default function Items () {
     const [addItems, setAddItems] = useState({
@@ -24,10 +23,8 @@ export default function Items () {
     const [itemsPerPage] = useState(15)
     const [isAddItem, setIsAddItem] = useState(false)
     const [isDelete, setIsDelete] = useState(false)
-    const [isEdit, setIsEdit] = useState(false)
     const [aksi, setAksi] = useState('')
     const [getId, setGetId] = useState('')
-    const [ItemToEdit, setItemToEdit] = useState(null)
 
     const totalPages = Math.ceil(items.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
@@ -94,7 +91,7 @@ export default function Items () {
 
     
     const deleteItem = async() => {
-        const res = await fetch('/api/items/datahandler',{
+        const res = await fetch('/api/items/datahandler', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -107,6 +104,44 @@ export default function Items () {
         console.log(data)
         setItems(prev=>prev.filter(data=>data.idbarang !== getId))
         setGetId('')
+    }
+
+    const updateItem = async() => {
+        const res = await fetch('/api/items/datahandler',{
+            method: 'PUT',
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                idbarang: addItems?.idbarang,
+                nm_barang: addItems?.nm_barang,
+                hrg_modal: addItems?.hrg_modal,
+                hrg_satuan: addItems?.hrg_satuan,
+                stok: addItems?.stok,
+                idkategori: addItems?.idkategori,
+                nm_kategori: addItems?.nm_kategori
+            })
+        })
+
+        const data = await res.json()
+        console.log(data.response)
+        setItems(prev=>{
+            return prev.map(updateItem => {
+                if(updateItem.idbarang === data.response.returnData.idbarang){
+                    return {
+                        idbarang: data?.response?.returnData?.idbarang,
+                        nm_barang: data?.response?.returnData?.nm_barang,
+                        hrg_modal: data?.response?.returnData?.hrg_modal,
+                        hrg_satuan: data?.response?.returnData?.hrg_satuan,
+                        stok: data?.response?.returnData?.stok,
+                        idkategori: data?.response?.returnData?.idkategori,
+                        nm_kategori: data?.response?.returnData?.nm_kategori
+                    }
+                } else {
+                    return updateItem
+                }
+            })
+        })
     }
 
     useEffect(()=>{
@@ -124,8 +159,7 @@ export default function Items () {
     
         if(e?.target?.name === "edit" || e === "edit"){
             setIsEdit(prev=>!prev)
-            setAksi('edit')
-            setItemToEdit(items.find(data=>data.idbarang == idbarang))
+            setAksi('Edit')
         }
     }
 
@@ -139,7 +173,7 @@ export default function Items () {
             setIsEdit(prev=>!prev)
         }
     } 
-    console.log(ItemToEdit)
+
     const handlePageChange = (currentNumber) => {
         setCurrentPage(currentNumber)
     }
@@ -157,24 +191,43 @@ export default function Items () {
         return
     }
 
-    const handleClickModalAddItem = () => {
+    const handleClickModalAddItem = (idbarang, tipe) => {
+        if(tipe === 'edit'){
+            setGetId(idbarang)
+            setAksi('Edit')
+            setAddItems(items.find(data=>data.idbarang == idbarang))
+        } 
+
+        if(tipe === 'tambah'){
+            setAksi('Tambah')
+            setAddItems({
+                idbarang: '',
+                nm_barang: '',
+                hrg_modal: '',
+                hrg_satuan: '',
+                stok: '',
+                idkategori: '',
+                nm_kategori: ''
+            })
+        }
+
         setIsAddItem(prev=>!prev)
-        setAddItems({
-            idbarang: '',
-            nm_barang: '',
-            hrg_modal: '',
-            hrg_satuan: '',
-            stok: '',
-            idkategori: '',
-            nm_kategori: ''
-        })
     }
 
-    const handleSubmitAddItem = (e) => {
+    const handleSubmitAddItem = (e, aksi) => {
         e.preventDefault()
-        insertItems()
-        setIsAddItem(prev=>!prev)
-        console.log(addItems)
+        if(aksi === 'Tambah'){
+            insertItems()
+            setIsAddItem(prev=>!prev)
+            console.log(addItems)
+        }
+
+        if(aksi === 'Edit'){
+            updateItem()
+            setIsAddItem(prev=>!prev)
+            // console.log(addItems)
+        }
+
     }
 
     const handleChangeAddItem = (e) => {
@@ -210,11 +263,24 @@ export default function Items () {
             const getMaxItemsInKategori = items?.filter(data=>data.idkategori === e.target.value).length
             const getKategoriName = listKategori?.find(data=>data.idkategori == e.target.value)
             const getName = getKategoriName?.nm_kategori
+
+            if(aksi==='Edit'){
+                setAddItems(prev=>{
+                    return {
+                        ...prev,
+                        idkategori: e.target.value,
+                        nm_kategori: getName
+                    }
+                })
+                return
+            }
+
             setAddItems(prev=>{
+                const maxItemsInKategori = getMaxItemsInKategori+1
                 return {
                     ...prev,
                     idkategori: e.target.value,
-                    idbarang : '99900' + (1000 + e.target.value) + getMaxItemsInKategori+1,
+                    idbarang : '99900' + (1000 + e.target.value) + maxItemsInKategori.toString().padStart(3, '0'),
                     nm_kategori: getName
                 }
             })
@@ -229,6 +295,7 @@ export default function Items () {
             addItems={addItems}
             listKategori={listKategori}
             items={items}
+            aksi={aksi}
             handleClickModalAddItem={handleClickModalAddItem}
             handleSubmitAddItem={handleSubmitAddItem}
             handleChangeAddItem={handleChangeAddItem} />
@@ -241,12 +308,6 @@ export default function Items () {
             handleClickConfirm={handleClickConfirm}
             handleClickConfirmAction={handleClickConfirmAction} />
         }
-        {
-            isEdit &&
-            <ModalEditItem
-            ItemToEdit={ItemToEdit}
-            listKategori={listKategori} />
-        }
 
         <section className="max-w-7xl mx-auto space-y-3">
             <h2 className="text-center text-3xl font-bold">Data Barang</h2>
@@ -258,7 +319,7 @@ export default function Items () {
                     </div>
                     <button type="button" className="h-10 bg-violet-200 border-2 border-violet-200 px-3 rounded-lg hover:bg-violet-400 hover:duration-150 hover:border-violet-400" onClick={handleRefresh}><FiRefreshCcw /></button>
                 </form>
-            <button className="h-10 w-fit bg-violet-200 rounded-full border-2 border-violet-200 px-3 flex gap-1 items-center font-semibold group hover:w-36 hover:bg-violet-400 hover:duration-150 hover:border-violet-400" onClick={handleClickModalAddItem}><MdAdd className="w-6 h-6" /><span className="hidden w-36 group-hover:inline">Tambah Data</span></button>
+            <button className="h-10 w-fit bg-violet-200 rounded-full border-2 border-violet-200 px-3 flex gap-1 items-center font-semibold group hover:w-36 hover:bg-violet-400 hover:duration-150 hover:border-violet-400" onClick={()=>handleClickModalAddItem(null,'tambah')}><MdAdd className="w-6 h-6" /><span className="hidden w-36 group-hover:inline">Tambah Data</span></button>
             </div>
             <table className="table-auto border-collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden">
             <thead className="w-full h-12 bg-slate-100 border-b">
@@ -287,7 +348,7 @@ export default function Items () {
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.stok}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.nm_kategori}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center flex justify-center items-center gap-2">
-                                <button className="shadow-md rounded-lg bg-green-400 px-3" name="edit" onClick={(e)=>handleClickConfirm(e,item.idbarang)}>Edit</button>
+                                <button className="shadow-md rounded-lg bg-green-400 px-3" name="edit" onClick={()=>handleClickModalAddItem(item.idbarang, 'edit')}>Edit</button>
                                 <button className="shadow-md rounded-lg bg-red-400 px-3" name="delete" onClick={(e)=>handleClickConfirm(e, item.idbarang)}>Delete</button>
                             </td>
                         </tr>

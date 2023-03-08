@@ -2,8 +2,15 @@
 import './globals.css'
 import { SessionProvider } from 'next-auth/react'
 import Header from './components/Header'
+import { useState } from 'react'
 
 export default function RootLayout({ children }) {
+  
+  const [isModalLogin, setIsModalLogin] = useState(false)
+
+  const handleClickModalLogin = () => {
+      setIsModalLogin(prev=>!prev)
+  }
   return (
     <html lang="en">
       {/*
@@ -13,8 +20,9 @@ export default function RootLayout({ children }) {
       <head />
       <SessionProvider>
       <body>
-        <Header />
-        <main className='pt-16'>{children}</main>
+        <Header
+        handleClickModalLogin={handleClickModalLogin} />
+        <main className='pt-14'>{children}</main>
       </body>
       </SessionProvider>
     </html>
