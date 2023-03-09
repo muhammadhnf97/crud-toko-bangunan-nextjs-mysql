@@ -6,8 +6,10 @@ import { FiRefreshCcw } from "react-icons/fi"
 import { MdAdd } from "react-icons/md"
 import ModalAddItems from "../components/ModalAddItems"
 import ModalConfirm from "../components/ModalConfirm"
+import { tableItems } from "@/lib/lib"
 
 export default function Items () {
+    const [items, setItems] = useState([])
     const [addItems, setAddItems] = useState({
         idbarang: '',
         nm_barang: '',
@@ -17,14 +19,13 @@ export default function Items () {
         idkategori: '',
         nm_kategori: ''
     })
-    const [items, setItems] = useState([])
     const [search, setSearch] = useState('')
-    const [currentPage, setCurrentPage] = useState(1)
-    const [itemsPerPage] = useState(15)
     const [isAddItem, setIsAddItem] = useState(false)
     const [isDelete, setIsDelete] = useState(false)
     const [aksi, setAksi] = useState('')
     const [getId, setGetId] = useState('')
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage] = useState(15)
 
     const totalPages = Math.ceil(items.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
@@ -219,13 +220,11 @@ export default function Items () {
         if(aksi === 'Tambah'){
             insertItems()
             setIsAddItem(prev=>!prev)
-            console.log(addItems)
         }
 
         if(aksi === 'Edit'){
             updateItem()
             setIsAddItem(prev=>!prev)
-            // console.log(addItems)
         }
 
     }
@@ -260,7 +259,6 @@ export default function Items () {
                 }
             })
         } else if(e.target.name === "kategori"){
-            const getMaxItemsInKategori = items?.filter(data=>data.idkategori === e.target.value).length
             const getKategoriName = listKategori?.find(data=>data.idkategori == e.target.value)
             const getName = getKategoriName?.nm_kategori
 
@@ -274,13 +272,15 @@ export default function Items () {
                 })
                 return
             }
+            
+            const getMaxItemsInKategori = items?.filter(data=>data.idkategori === e.target.value).map(obj => parseInt(obj.idbarang.substring(10)))
 
             setAddItems(prev=>{
-                const maxItemsInKategori = getMaxItemsInKategori+1
+                const maxItemsInKategori = Math.max(...getMaxItemsInKategori) + 1
                 return {
                     ...prev,
                     idkategori: e.target.value,
-                    idbarang : '99900' + (1000 + e.target.value) + maxItemsInKategori.toString().padStart(3, '0'),
+                    idbarang : '9990001' + e.target.value.toString().padStart(3, '0') + maxItemsInKategori.toString().padStart(3, '0'),
                     nm_kategori: getName
                 }
             })
@@ -321,7 +321,7 @@ export default function Items () {
                 </form>
             <button className="h-10 w-fit bg-violet-200 rounded-full border-2 border-violet-200 px-3 flex gap-1 items-center font-semibold group hover:w-36 hover:bg-violet-400 hover:duration-150 hover:border-violet-400" onClick={()=>handleClickModalAddItem(null,'tambah')}><MdAdd className="w-6 h-6" /><span className="hidden w-36 group-hover:inline">Tambah Data</span></button>
             </div>
-            <table className="table-auto border-collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden">
+            {/* <table className="table-auto border-collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden">
             <thead className="w-full h-12 bg-slate-100 border-b">
                 <tr className="gap-5">
                     <th className="px-5">No</th>
@@ -378,7 +378,7 @@ export default function Items () {
                     return null;
                     }
                 })}
-            </div>
+            </div> */}
         </section>
         </>
     )
