@@ -3,7 +3,7 @@ import dbconnect from "@/lib/connectdb";
 export default async function handler(req, res) {
     if(req.method === 'GET'){
         try {
-            const query = 'SELECT * FROM kategori ORDER BY idkategori ASC'
+            const query = 'SELECT * FROM kategori ORDER BY idkategori DESC'
             const data = await dbconnect(query)
             res.status(200).json({response:{
                 message: 'Data berhasil diambil',
@@ -16,16 +16,14 @@ export default async function handler(req, res) {
 
     if(req.method === 'POST'){
         try {
-            const {idkategori, nm_kategori} = req.body
-            const query = 'INSERT INTO kategori (idkategori, nm_kategori) VALUES (?, ?)'
-            const values = [idkategori, nm_kategori]
-            const data = await dbconnect(query, values)
+            const nm_kategori = req.body.nm_kategori
+            const query = 'INSERT INTO kategori (nm_kategori) VALUES (?)'
+            const values = [nm_kategori]
+            await dbconnect(query, values)
             res.status(200).json({response:{
                 message: "Data berhasil disimpan",
-                data,
                 returnData: {
-                    idkategori: idkategori,
-                    nm_kategori: nm_kategori
+                    nm_kategori
                 }
             }})
         } catch (error) {

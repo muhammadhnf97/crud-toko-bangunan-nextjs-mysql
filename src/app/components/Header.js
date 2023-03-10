@@ -22,7 +22,7 @@ export default function Header ({ handleClickModalLogin }) {
                     <button className="hover:text-violet-900 flex items-center gap-2 justify-center"><HiViewGridAdd />Master</button>
                     <div className="hidden absolute bg-white border rounded-lg w-40 px-5 group-hover:flex flex-col space-y-1 py-1">
                         <Link href='/items' className="py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Items</Link>
-                        <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Kategori</p>
+                        <Link href='/kategori' className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Kategori</Link>
                         <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Konsumen</p>
                         <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Supplier</p>
                     </div>

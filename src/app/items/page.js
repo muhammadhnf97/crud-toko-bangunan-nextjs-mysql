@@ -6,9 +6,9 @@ import { FiRefreshCcw } from "react-icons/fi"
 import { MdAdd } from "react-icons/md"
 import ModalAddItems from "../components/ModalAddItems"
 import ModalConfirm from "../components/ModalConfirm"
-import { tableItems } from "@/lib/lib"
 
 export default function Items () {
+    const page = 'item'
     const [items, setItems] = useState([])
     const [addItems, setAddItems] = useState({
         idbarang: '',
@@ -151,7 +151,7 @@ export default function Items () {
         setItems(prev=>prev.filter(data=>data.idbarang !== getId))
     }, [])
 
-    const handleClickConfirm = (e, idbarang) => {
+    const handleClickConfirmDelete = (e, idbarang) => {
         setGetId(idbarang)
         if(e?.target?.name === "delete" || e === "delete"){
             setIsDelete(prev=>!prev)
@@ -164,7 +164,7 @@ export default function Items () {
         }
     }
 
-    const handleClickConfirmAction = (aksi) => {
+    const handleClickConfirmActionDelete = (aksi) => {
         if(aksi === "delete"){
             deleteItem()
             setIsDelete(prev=>!prev)
@@ -226,7 +226,6 @@ export default function Items () {
             updateItem()
             setIsAddItem(prev=>!prev)
         }
-
     }
 
     const handleChangeAddItem = (e) => {
@@ -303,10 +302,11 @@ export default function Items () {
         {
             isDelete &&
             <ModalConfirm
+            page={page}
             aksi={aksi}
-            handleChangeAddItem={handleChangeAddItem}
-            handleClickConfirm={handleClickConfirm}
-            handleClickConfirmAction={handleClickConfirmAction} />
+            value={addItems.nm_barang}
+            handleClickConfirmDelete={handleClickConfirmDelete}
+            handleClickConfirmActionDelete={handleClickConfirmActionDelete} />
         }
 
         <section className="max-w-7xl mx-auto space-y-3">
@@ -321,7 +321,7 @@ export default function Items () {
                 </form>
             <button className="h-10 w-fit bg-violet-200 rounded-full border-2 border-violet-200 px-3 flex gap-1 items-center font-semibold group hover:w-36 hover:bg-violet-400 hover:duration-150 hover:border-violet-400" onClick={()=>handleClickModalAddItem(null,'tambah')}><MdAdd className="w-6 h-6" /><span className="hidden w-36 group-hover:inline">Tambah Data</span></button>
             </div>
-            {/* <table className="table-auto border-collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden">
+            <table className="table-auto border-collapse mx-auto shadow-lg w-full rounded-lg overflow-hidden">
             <thead className="w-full h-12 bg-slate-100 border-b">
                 <tr className="gap-5">
                     <th className="px-5">No</th>
@@ -349,7 +349,7 @@ export default function Items () {
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.nm_kategori}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center flex justify-center items-center gap-2">
                                 <button className="shadow-md rounded-lg bg-green-400 px-3" name="edit" onClick={()=>handleClickModalAddItem(item.idbarang, 'edit')}>Edit</button>
-                                <button className="shadow-md rounded-lg bg-red-400 px-3" name="delete" onClick={(e)=>handleClickConfirm(e, item.idbarang)}>Delete</button>
+                                <button className="shadow-md rounded-lg bg-red-400 px-3" name="delete" onClick={(e)=>handleClickConfirmDelete(e, item.idbarang)}>Delete</button>
                             </td>
                         </tr>
                     ) 
@@ -378,7 +378,7 @@ export default function Items () {
                     return null;
                     }
                 })}
-            </div> */}
+            </div>
         </section>
         </>
     )
