@@ -4,11 +4,9 @@ import {AiOutlineArrowRight} from 'react-icons/ai'
 import {HiViewGridAdd} from 'react-icons/hi'
 import {GrHomeRounded} from 'react-icons/gr'
 import {GrTransaction} from 'react-icons/gr'
-import {AiOutlineLogin} from 'react-icons/ai'
 import Link from "next/link"
-import { useState } from "react"
 
-export default function Header ({ handleClickModalLogin }) {
+export default function Header () {
     const session = useSession()
 
     return (
@@ -23,15 +21,15 @@ export default function Header ({ handleClickModalLogin }) {
                     <div className="hidden absolute bg-white border rounded-lg w-40 px-5 group-hover:flex flex-col space-y-1 py-1">
                         <Link href='/items' className="py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Items</Link>
                         <Link href='/kategori' className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Kategori</Link>
-                        <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Konsumen</p>
-                        <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Supplier</p>
+                        <Link href='/konsumen' className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Konsumen</Link>
+                        <Link href='/supplier' className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Supplier</Link>
                     </div>
                 </div>
                 <div className="group w-20">
                     <button className="hover:text-violet-900 flex items-center gap-2 justify-center"><GrTransaction/>Transaksi</button>
                     <div className="hidden absolute bg-white border rounded-lg w-40 px-5 group-hover:flex flex-col space-y-1 py-1">
-                        <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Penjualan</p>
-                        <p className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Pembelian</p>
+                        <Link href='/pembelian' className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Pembelian</Link>
+                        <Link href='/penjualan' className="cursor-pointer py-2 hover:font-semibold hover:pl-3 hover:scale-110 duration-150 group/arrow"><AiOutlineArrowRight className="hidden group-hover/arrow:inline group-hover/arrow:pr-1" />Penjualan</Link>
                     </div>
                 </div>
             </div>

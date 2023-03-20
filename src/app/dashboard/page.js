@@ -22,8 +22,7 @@ export default function Dashboard(){
             },
         })
         const data = await res.json()
-        console.log(data.response.data.length)
-        setItems(data.response.data)
+        setItems(data?.response?.data)
     }
     useEffect(()=>{
         getItems()

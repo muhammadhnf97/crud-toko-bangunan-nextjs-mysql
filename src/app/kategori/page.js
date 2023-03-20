@@ -145,7 +145,6 @@ export default function Page () {
     const handleClickConfirmActionDelete = () => {
         deleteKategori()
         setIsDelete(prev=>!prev)
-
     }
 
     const handlePageChange = (currentNumber) => {

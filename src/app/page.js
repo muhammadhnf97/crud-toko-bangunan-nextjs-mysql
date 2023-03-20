@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import ModalLogin from "./components/ModalLogin";
 import { HiOutlineMail } from 'react-icons/hi'
 import { RiLockPasswordFill } from 'react-icons/ri'
 import Link from "next/link";
