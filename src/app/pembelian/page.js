@@ -43,7 +43,7 @@ export default function Page() {
     })
     const [keranjangBelanja, setKeranjangBelanja] = useState([])
     const [lanjutTambahBarang, setLanjutTambahBarang] = useState(false)
-    console.log(newPembelian)
+    console.log(keranjangBelanja)
     let no
 
     const [dibayarkan, setDibayarkan] = useState('')
@@ -105,7 +105,7 @@ export default function Page() {
         })
 
         const data = await res.json()
-        console.log(data)
+        console.log(data.valuesUpdateItems)
     }
 
     const insertDetailPembelian = async() =>{
@@ -421,8 +421,8 @@ export default function Page() {
                             </div>
                         </div>
                         <div className="w-full flex gap-3 justify-center items-center py-[0.5rem]">
-                            <button className="rounded-lg flex-1 py-1 bg-green-300 hover:bg-green-400 active:bg-green-500 font-semibold flex items-center justify-center gap-3" onClick={(e)=>handleSubmitPindahKeKeranjang(e)}><BsCart4 />Add to Chart</button>
-                            <button className="rounded-lg flex-1 py-1 bg-red-300 hover:bg-red-400 active:bg-red-500 font-semibold flex items-center justify-center gap-3" onClick={(e)=>handleClickBatalKonfirmasiBarang(e)}><ImCross />Cancel</button>
+                            <button className="rounded-lg flex-1 py-2 bg-green-300 hover:bg-green-400 active:bg-green-500 font-semibold flex items-center justify-center gap-3" onClick={(e)=>handleSubmitPindahKeKeranjang(e)}><BsCart4 />Add to Chart</button>
+                            <button className="rounded-lg flex-1 py-2 bg-red-300 hover:bg-red-400 active:bg-red-500 font-semibold flex items-center justify-center gap-3" onClick={(e)=>handleClickBatalKonfirmasiBarang(e)}><ImCross />Cancel</button>
                         </div>
                     </form>
                 </div>
