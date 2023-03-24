@@ -217,7 +217,7 @@ export default function Page () {
             handleClickConfirmDelete={handleClickConfirmDelete}
             handleClickConfirmActionDelete={handleClickConfirmActionDelete} />
         }
-        <section className="max-w-7xl mx-auto space-y-3">
+        <section className="max-w-7xl mx-auto space-y-3 bg-white p-3 rounded-lg shadow-md bg-opacity-40">
             <h2 className="text-center text-3xl font-bold">Data Kategori</h2>
             <div className="flex justify-between items-center">
                 <form className="w-full flex items-center gap-2">
@@ -242,7 +242,7 @@ export default function Page () {
                 kategories.map((kat, index)=>{
                     no = no + 1
                     return(
-                        <tr key={kat.idbarang} className={`leading-loose group ${index % 2 === 0 ? 'bg-violet-50' : ''} `}>
+                        <tr key={kat.idbarang} className={`leading-loose group ${index % 2 === 0 ? 'bg-violet-50' : 'bg-white'} `}>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{no}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{kat.nm_kategori}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center flex justify-center items-center gap-2">

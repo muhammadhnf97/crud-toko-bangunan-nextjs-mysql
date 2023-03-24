@@ -8,16 +8,14 @@ import { BsCart4 } from "react-icons/bs"
 import { ImCross } from "react-icons/im"
 
 export default function Page() {
-    const page="pembelian"
+    const page="penjualan"
     const session = useSession()
     
-    const [dataSupplier, setDataSupplier] = useState([])
-    const [newPembelian, setNewPembelian] = useState({
-        no_notabeli: null,
-        no_pembelian: null,
+    const [dataPelanggan, setDataPelanggan] = useState([])
+    const [newPenjualan, setNewPenjualan] = useState({
+        no_nota: null,
         user: null,
-        idsupplier: null,
-        jenis: null
+        idpelanggan: null,
     })
 
     const [isNewEntry, setIsNewEntry] = useState(false)
@@ -32,13 +30,12 @@ export default function Page() {
 
     const [search, setSearch] = useState('')
     
-    const [confirmBelanja, setConfirmBelanja] = useState({
-        no_pembelian: null,
+    const [confirmPenjualan, setConfirmPenjualan] = useState({
+        no_nota: null,
         idbarang: null,
         nm_barang: null,
         hrg_satuan: null,
         stok: null,
-        hrg_modal: null,
         jumlah: null,
         total: null
     })
@@ -52,32 +49,32 @@ export default function Page() {
     
     const handleSubmitVerificationFornextAction = (e) => {
         e.preventDefault()
-        if(newPembelian.idsupplier !== null && newPembelian.jenis !== null && newPembelian.no_notabeli !== null ){
+        if(newPenjualan.idpelanggan !== null && newPenjualan.no_nota !== null){
             setLanjutTambahBarang(true)
             setIsNewEntry(true)
         }
     }
 
-    const getSupplier = async() => {
-        const res = await fetch('/api/supplier/datahandler', {
+    const getPelanggan = async() => {
+        const res = await fetch('/api/konsumen/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         const data = await res.json()
-        setDataSupplier(data.data)
+        setDataPelanggan(data.data)
     }
 
-    const getPembelian = async() => {
-        const res = await fetch('/api/pembelian/datahandler', {
+    const getPenjualan = async() => {
+        const res = await fetch('/api/penjualan/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         const data = await res.json()
-        setNewPembelian(pembelian=>({...pembelian, no_pembelian: data.no_pembelian}))
+        setNewPenjualan(penjualan=>({...penjualan, no_nota: data.no_nota}))
     }
 
     const getItems = async() => {
@@ -90,27 +87,26 @@ export default function Page() {
         const data = await res.json()
         setDataItems(data.response.data)
     }
-
-    const insertPembelian = async() => {
-        const res = await fetch('/api/pembelian/datahandler', {
+    const insertPenjualan = async() => {
+        const res = await fetch('/api/penjualan/datahandler', {
             method: 'POST',
             headers: {
                 "Content-Type":"application/json"
             },
             body:JSON.stringify({
-                no_notabeli: newPembelian?.no_notabeli,
+                no_nota: newPenjualan?.no_nota,
                 user: session.data.user.name ,
-                idsupplier: newPembelian?.idsupplier,
-                jenis: newPembelian?.jenis
+                idpelanggan: newPenjualan?.idpelanggan,
+                jenis: newPenjualan?.jenis
             })
         })
 
         const data = await res.json()
-        console.log(data.valuesUpdateItems)
+        console.log(data)
     }
 
-    const insertDetailPembelian = async() =>{
-        const res = await fetch('/api/pembeliandetail/datahandler', {
+    const insertDetailPenjualan = async() =>{
+        const res = await fetch('/api/penjualandetail/datahandler', {
             method: 'POST',
             headers: {
                 "Content-Type":"application/json"
@@ -123,19 +119,13 @@ export default function Page() {
     }
 
     useEffect(()=>{
-        getSupplier()
-        getPembelian()
+        getPelanggan()
+        getPenjualan()
         getItems()
     }, [isNewEntry])
 
-    const handleChangePembelian = (e) => {
-        if(e.target.name === 'supplier'){
-            setNewPembelian(data=>({...data, idsupplier: e.target.value}))
-        } else if(e.target.name === 'jenis'){
-            setNewPembelian(data=>({...data, jenis: e.target.value}))
-        } else if(e.target.name === 'no_notabeli'){
-            setNewPembelian(data=>({ ...data, no_notabeli: e.target.value}))
-        }
+    const handleChangePenjualan = (e) => {
+        setNewPenjualan(data=>({...data, idpelanggan: e.target.value}))
     }
 
     const handlePageChange = (page) => {
@@ -158,35 +148,35 @@ export default function Page() {
     const handleClickKonfirmasiBarang = (idbarang) => {
         const getSingleItem = dataItems?.find(data=>data.idbarang === idbarang)
 
-        setConfirmBelanja(()=>{
+        setConfirmPenjualan(()=>{
             return {
-                no_pembelian: newPembelian?.no_pembelian,
+                no_nota: newPenjualan?.no_nota,
                 idbarang: getSingleItem?.idbarang,
                 nm_barang: getSingleItem?.nm_barang,
                 stok: getSingleItem?.stok,
                 hrg_satuan: getSingleItem?.hrg_satuan,
                 jumlah: "",
-                hrg_modal: getSingleItem?.hrg_modal,
                 }
         })
     }
 
     const handleChangeDetailKonfirmasiBelanja = (e) => {
-        if(e.target.name === 'hrg_modal'){
-            setConfirmBelanja(data=>{
+        if(e.target.name === 'hrg_satuan'){
+            setConfirmPenjualan(data=>{
                 return {
                     ...data,
-                    hrg_modal: parseInt(e.target.value)
+                    hrg_satuan: parseInt(e.target.value)
                 }
             })
-        } else if(e.target.name === 'jumlah'){
-            setConfirmBelanja(data=>{
-                return {
-                    ...data,
-                    jumlah: parseInt(e.target.value)
-                }
-            })
+            return
         }
+
+        setConfirmPenjualan(data=>{
+            return {
+                ...data,
+                jumlah: parseInt(e.target.value)
+            }
+        })
     }
 
     const handleSubmitPindahKeKeranjang = (e) => {
@@ -195,23 +185,21 @@ export default function Page() {
         setKeranjangBelanja(data=>{
             return [
                 ...data, {
-                    no_pembelian: confirmBelanja?.no_pembelian,
-                    idbarang: confirmBelanja?.idbarang,
-                    nm_barang: confirmBelanja?.nm_barang,
-                    hrg_satuan: confirmBelanja?.hrg_satuan,
-                    stok: confirmBelanja?.stok,
-                    hrg_modal: confirmBelanja?.hrg_modal,
-                    jumlah: confirmBelanja?.jumlah,
-                    total: confirmBelanja?.jumlah * confirmBelanja?.hrg_modal
+                    no_nota: confirmPenjualan?.no_nota,
+                    idbarang: confirmPenjualan?.idbarang,
+                    nm_barang: confirmPenjualan?.nm_barang,
+                    hrg_satuan: confirmPenjualan?.hrg_satuan,
+                    stok: confirmPenjualan?.stok,
+                    jumlah: confirmPenjualan?.jumlah,
+                    total: confirmPenjualan?.jumlah * confirmPenjualan?.hrg_satuan
                 }]
         })
-        setConfirmBelanja({
-            no_pembelian: null,
+        setConfirmPenjualan({
+            no_nota: null,
             idbarang: null,
             nm_barang: null,
             hrg_satuan: null,
             stok: null,
-            hrg_modal: null,
             jumlah: null,
             total: null
         })
@@ -219,13 +207,12 @@ export default function Page() {
 
     const handleClickBatalKonfirmasiBarang = (e) => {
         e.preventDefault()
-        setConfirmBelanja({
-            no_pembelian: null,
+        setConfirmPenjualan({
+            no_nota: null,
             idbarang: null,
             nm_barang: null,
             hrg_satuan: null,
             stok: null,
-            hrg_modal: null,
             jumlah: null,
             total: null
         })
@@ -239,21 +226,19 @@ export default function Page() {
         setDibayarkan(e.target.value)
     }
 
-    const handleClickBatalPembelian = () => {
-        setNewPembelian({
-            no_notabeli: null,
-            no_pembelian: null,
+    const handleClickBatalPenjualan = () => {
+        setNewPenjualan({
+            no_nota: null,
             user: null,
-            idsupplier: null,
+            idpelanggan: null,
             jenis: null
         })
-        setConfirmBelanja({
-            no_pembelian: null,
+        setConfirmPenjualan({
+            no_nota: null,
             idbarang: null,
             nm_barang: null,
             hrg_satuan: null,
             stok: null,
-            hrg_modal: null,
             jumlah: null,
             total: null
         })
@@ -262,23 +247,22 @@ export default function Page() {
         setIsNewEntry(false)
     }
 
-    const handleClickSimpanSeluruhPembelian = async () => {
-      insertPembelian()
-      insertDetailPembelian()
-      setNewPembelian({
-        no_notabeli: null,
-        no_pembelian: null,
+    const handleClickSimpanSeluruhPenjualan = async () => {
+      insertPenjualan()
+      insertDetailPenjualan()
+      setNewPenjualan({
+        no_nota: null,
+        no_nota: null,
         user: null,
-        idsupplier: null,
+        idpelanggan: null,
         jenis: null
       })
-      setConfirmBelanja({
-          no_pembelian: null,
+      setConfirmPenjualan({
+          no_nota: null,
           idbarang: null,
           nm_barang: null,
           hrg_satuan: null,
           stok: null,
-          hrg_modal: null,
           jumlah: null,
           total: null
       })
@@ -287,16 +271,11 @@ export default function Page() {
       setIsNewEntry(false)
     }
 
-    let gtot
-    
     useEffect(() => {
-        if (newPembelian?.idsupplier === null) {
-        document.getElementById('supplier').value = '';
+        if (newPenjualan?.idpelanggan === null) {
+        document.getElementById('pelanggan').value = '';
         }
-        if (newPembelian?.jenis === null) {
-        document.getElementById('jenis').value = '';
-        }
-    }, [newPembelian]);
+    }, [newPenjualan]);
 
 
     const grandTotal = keranjangBelanja.reduce((gtotal, obj) => gtotal + obj.total, 0)
@@ -306,29 +285,17 @@ export default function Page() {
     }
 
     return (
-    <div className="space-y-5 max-w-7xl mx-auto bg-white rounded-lg bg-opacity-40 p-3 shadow-md">
+    <div className="space-y-3 max-w-7xl mx-auto bg-white shadow-md p-3 rounded-lg bg-opacity-40">
         <div className='flex shadow-md rounded-lg p-3 gap-5 bg-white'>
             <div className="max-w-2xl space-y-3 px-2 rounded-lg">
                 <form className="space-y-3" onSubmit={(e)=>handleSubmitVerificationFornextAction(e)}>
                     <div className="flex items-center">
-                        <p className="w-28">Supplier</p>
-                        <select id="supplier" className="border px-3" name="supplier" onChange={e=>handleChangePembelian(e)} value={newPembelian?.idsupplier === null ? 'Pilih Supplier' : newPembelian?.idsupplier} required>
-                            <option value="">{newPembelian?.idsupplier === null ? 'Pilih Supplier' : newPembelian?.idsupplier}</option>
-                            {dataSupplier?.map(data => (
-                            <option key={data.idsupplier} value={data.idsupplier}>{data.nm_supplier}</option>
+                        <p className="w-28">Pelanggan</p>
+                        <select id="pelanggan" className="border px-3 w-full" name="pelanggan" onChange={e=>handleChangePenjualan(e)} value={newPenjualan?.idpelanggan === null ? 'Pilih Pelanggan' : newPenjualan?.idpelanggan} required>
+                            <option value="">{newPenjualan?.idpelanggan === null ? 'Pilih Pelanggan' : newPenjualan?.idpelanggan}</option>
+                            {dataPelanggan?.map(data => (
+                            <option key={data.idpelanggan} value={data.idpelanggan}>{data.nm_konsumen}</option>
                             ))}
-                        </select>
-                    </div>
-                    <div className="flex items-center">
-                        <p className="w-28">Nota Beli</p>
-                        <input type={'text'} id='no_notabeli' name="no_notabeli" value={newPembelian?.no_notabeli === null ? '' : newPembelian?.no_notabeli} className="border px-3"  onChange={(e)=>handleChangePembelian(e)} required />
-                    </div>
-                    <div className="flex items-center">
-                        <p className="w-28">Jenis</p>
-                        <select id="jenis" className="border px-3" name="jenis" value={newPembelian?.jenis === null ? 'Pilih Supplier' : newPembelian?.jenis} onChange={e=>handleChangePembelian(e)} required>
-                            <option value="">{newPembelian?.jenis === null ? 'Pilih Jenis' : newPembelian?.jenis}</option>
-                            <option value='Tunai'>Tunai</option>
-                            <option value='Kredit'>Kredit</option>
                         </select>
                     </div>
                     <button className="w-full bg-violet-300 hover:bg-violet-400 active:bg-violet-500 active:shadow-inner active:text-violet-50 font-semibold duration-100 rounded-lg shadow-sm py-2">Lanjut</button>
@@ -352,7 +319,7 @@ export default function Page() {
                                 <th className="px-2 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody className={`${!lanjutTambahBarang ? 'hidden bg-white' : '' }`}>
+                        <tbody className={`${!lanjutTambahBarang ? 'hidden' : '' }`}>
                             {
                             dataItems?.map((item, index)=>{
                                 return(
@@ -401,31 +368,27 @@ export default function Page() {
                             <div className="flex flex-col flex-1">
                                 <div className="space-y-2">
                                     <p>ID Barang</p>
-                                    <input type='text' name="idbarang" className="w-full border px-3" value={confirmBelanja?.idbarang === null ? '' : confirmBelanja?.idbarang} disabled />
+                                    <input type='text' name="idbarang" className="w-full border px-3" value={confirmPenjualan?.idbarang === null ? '' : confirmPenjualan?.idbarang} disabled />
                                 </div>
                                 <div className="space-y-2">
                                     <p>Nama Barang</p>
-                                    <input type='text' name="nm_barang" className="w-full border px-3" value={confirmBelanja?.nm_barang === null ? '' : confirmBelanja?.nm_barang} disabled />
+                                    <input type='text' name="nm_barang" className="w-full border px-3" value={confirmPenjualan?.nm_barang === null ? '' : confirmPenjualan?.nm_barang} disabled />
                                 </div>
                             </div>
                             <div className="flex flex-col flex-1">
                                 <div className="space-y-2">
                                     <p>Harga Jual</p>
-                                    <input type='text' name="hrg_satuan" className="w-full border px-3" value={confirmBelanja?.hrg_satuan === null ? '' : formatter.format(confirmBelanja?.hrg_satuan)} disabled />
+                                    <input type='text' name="hrg_satuan" className="w-full border px-3" value={confirmPenjualan?.hrg_satuan === null ? '' : confirmPenjualan?.hrg_satuan} disabled={confirmPenjualan?.hrg_satuan === null ? true : false} onChange={(e)=>handleChangeDetailKonfirmasiBelanja(e)} />
                                 </div>
                                 <div className="space-y-2">
                                     <p>Stok Tersisa</p>
-                                    <input type='number' name="stok" className="w-full border px-3" value={confirmBelanja?.stok === null ? '' : confirmBelanja?.stok} disabled />
+                                    <input type='number' name="stok" className="w-full border px-3" value={confirmPenjualan?.stok === null ? '' : confirmPenjualan?.stok} disabled />
                                 </div>
                             </div>
                             <div className="flex flex-col flex-1">
                                 <div className="space-y-2">
-                                    <p>Harga Beli</p>
-                                    <input type='number' name="hrg_modal" className="w-full border px-3" disabled={confirmBelanja?.hrg_modal === null ? true : false} value={confirmBelanja?.hrg_modal === null ? '' : confirmBelanja?.hrg_modal} onChange={(e)=>handleChangeDetailKonfirmasiBelanja(e)} />
-                                </div>
-                                <div className="space-y-2">
-                                    <p>Jumlah Beli</p>
-                                    <input type='number' name="jumlah" className="w-full border px-3" disabled={confirmBelanja?.jumlah === null ? true : false} value={confirmBelanja?.jumlah === null ? '' : confirmBelanja?.jumlah} onChange={(e)=>handleChangeDetailKonfirmasiBelanja(e)} />
+                                    <p>Jumlah Jual</p>
+                                    <input type='number' name="jumlah" className="w-full border px-3" disabled={confirmPenjualan?.jumlah === null ? true : false} value={confirmPenjualan?.jumlah === null ? '' : confirmPenjualan?.jumlah} onChange={(e)=>handleChangeDetailKonfirmasiBelanja(e)} />
                                 </div>
                             </div>
                         </div>
@@ -441,7 +404,7 @@ export default function Page() {
                             <tr className="">
                                 <th className="px-2 text-left w-fit">No</th>
                                 <th className="px-2 text-left">Nama Item</th>
-                                <th className="px-2 text-center">Modal Beli</th>
+                                <th className="px-2 text-left">Harga Jual</th>
                                 <th className="px-2 text-center">Jumlah</th>
                                 <th className="px-2 text-center">Total</th>
                                 <th className="px-2 text-center">Aksi</th>
@@ -450,11 +413,12 @@ export default function Page() {
                     <tbody>
                         {
                         keranjangBelanja?.map((item, index)=>{
+                            no = index + 1
                             return(
                                 <tr key={item.idbarang} className={`leading-normal group ${index % 2 === 0 ? 'bg-violet-50' : ''} `} onClick={()=>handleClickKonfirmasiBarang(item.idbarang)}>
-                                    <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-left w-fit">{no = index + 1}</td>
+                                    <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-left w-fit">{no}</td>
                                     <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.nm_barang}</td>
-                                    <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-left">{formatter.format(item.hrg_modal)}</td>
+                                    <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center">{formatter.format(item.hrg_satuan)}</td>
                                     <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center">{item.jumlah}</td>
                                     <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center">{formatter.format(item.total)}</td>
                                     <td className="py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center">
@@ -468,9 +432,28 @@ export default function Page() {
                 </div>
             </div>
         </div>
-        <div className="w-full gap-5 p-3 flex font-semibold bg-white rounded-lg shadow-md">
-            <button className="w-full h-full px-5 py-3 rounded-lg bg-green-300 hover:bg-green-400 active:bg-green-500" onClick={handleClickSimpanSeluruhPembelian}>Simpan</button>
-            <button className="w-full h-full px-5 py-3 rounded-lg bg-red-300 hover:bg-red-400 active:bg-red-500" onClick={handleClickBatalPembelian}>Batal</button>
+        <div className="w-full shadow-md gap-5 p-3 flex h-full bg-white rounded-lg">
+            <div className="w-full flex flex-col space-y-2">
+                <div className="w-full flex">
+                    <div className="w-40 py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center border border-biolet-100 text-lg h-full bg-violet-50" colSpan={3}>Total Belanja</div>
+                    <div className="flex-1 py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-left border border-biolet-100 text-xl font-semibold" colSpan={3}>{formatter.format(grandTotal)}</div>
+                </div>
+                <div className="w-full flex">
+                    <div className="w-40 py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center border border-biolet-100 text-lg h-full bg-violet-50" colSpan={3}>Dibayarkan</div>
+                    <div className="flex-1 py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center border border-biolet-100 text-lg h-full bg-violet-5" colSpan={3}><input type={'number'} className="px-3 py-1 w-full" name="dibayarkan" value={dibayarkan} onChange={(e)=>handleChangeDibayarkan(e)} /></div>
+                </div>
+                <div className="w-full flex">
+                    <button className="w-full mx-auto px-5 py-3 rounded-lg bg-yellow-300 hover:bg-yellow-400 active:bg-yellow-500" colSpan={3} onClick={handleClickHitungBelanja}>Hitung</button>
+                </div>
+                <div className="w-full flex">
+                    <div className="w-40 py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-center border border-biolet-100 text-lg h-full bg-violet-50" colSpan={3}>Kembalian</div>
+                    <div className="flex-1 py-1 px-2 group-hover:bg-violet-200 group-hover:duration-150 text-left border border-biolet-100 text-xl font-semibold" colSpan={3}>{dibayarkan === null ? 0 : formatter.format(kembalian)}</div>
+                </div>
+            </div>
+            <div className="flex flex-col items-center justify-center space-y-3 font-semibold">
+                <button className="w-full h-full px-5 py-3 rounded-lg bg-green-300 hover:bg-green-400 active:bg-green-500" onClick={handleClickSimpanSeluruhPenjualan}>Selesai</button>
+                <button className="w-full h-full px-5 py-3 rounded-lg bg-red-300 hover:bg-red-400 active:bg-red-500" onClick={handleClickBatalPenjualan}>Batal</button>
+            </div>
         </div>
     </div>
     )

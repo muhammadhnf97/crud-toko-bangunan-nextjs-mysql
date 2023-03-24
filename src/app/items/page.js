@@ -309,7 +309,7 @@ export default function Items () {
             handleClickConfirmActionDelete={handleClickConfirmActionDelete} />
         }
 
-        <section className="max-w-7xl mx-auto space-y-3">
+        <section className="max-w-7xl mx-auto space-y-3 bg-white p-3 rounded-lg shadow-md bg-opacity-40">
             <h2 className="text-center text-3xl font-bold">Data Barang</h2>
             <div className="flex justify-between items-center">
                 <form className="w-full flex items-center gap-2">
@@ -339,7 +339,7 @@ export default function Items () {
                 items.map((item, index)=>{
                     no = no + 1
                     return(
-                        <tr key={item.idbarang} className={`leading-loose group ${index % 2 === 0 ? 'bg-violet-50' : ''} `}>
+                        <tr key={item.idbarang} className={`leading-loose group ${index % 2 === 0 ? 'bg-violet-50' : 'bg-white'} `}>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-center">{no}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.idbarang}</td>
                             <td className="px-5 py-1 group-hover:bg-violet-200 group-hover:duration-150 text-left">{item.nm_barang}</td>

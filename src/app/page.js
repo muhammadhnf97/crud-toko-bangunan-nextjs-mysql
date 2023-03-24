@@ -45,7 +45,7 @@ export default function Home() {
   }
 
   return (
-    <main className="w-full h-screen flex flex-col items-center justify-center bg-violet-100">
+    <main className="w-full h-screen flex flex-col items-center justify-center bg-violet-100 fixed z-10 top-0">
     <form className="w-96 h-96 border-2 rounded-2xl border-slate-600 shadow-lg p-10 md:w-[25rem] space-y-3 relative overflow-hidden bg-white flex flex-col justify-center" onSubmit={(e)=>handleSubmit(e)}>
         <h1 className="text-center font-semibold text-4xl text-violet-700">Welcome.</h1>
         <div className="w-full flex flex-col">
