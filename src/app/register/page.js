@@ -34,8 +34,6 @@ export default function Home() {
     }
   }
 
-  console.log(isSubmit, password)
-
   const insertData = async() => {
     try { 
       const res = await fetch('http://localhost:3000//api/auth/datahandler',{
@@ -74,8 +72,6 @@ export default function Home() {
     setIsSubmit(true)
     checkEmail()
   }
-
-  console.log(name, email, password)
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center bg-violet-100">

@@ -37,7 +37,6 @@ export default function Page () {
             }
         })
         const data = await res.json()
-        console.log(data.message)
         setDataSupplier(data.data)
     }
 
@@ -57,8 +56,6 @@ export default function Page () {
         })
 
         const data = await res.json()
-        console.log(data.message)
-        console.log(data.returnData)
         setDataSupplier(prev=>{
             return [{
                 idsupplier: data?.returnData?.idsupplier,
@@ -87,7 +84,6 @@ export default function Page () {
         })
 
         const data = await res.json()
-        console.log(data.message)
         setDataSupplier(prev=>{
             return prev.map(supplierUpdate => {
                 if(supplierUpdate.idsupplier === data.returnData.idsupplier){
@@ -238,7 +234,6 @@ export default function Page () {
             }
         })
     }
-    console.log(supplierNewValue)
     return (
         <>
         {

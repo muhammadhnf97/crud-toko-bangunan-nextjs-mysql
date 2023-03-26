@@ -56,7 +56,7 @@ export default function Page() {
     }
 
     const getPelanggan = async() => {
-        const res = await fetch('/api/konsumen/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/konsumen/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -67,7 +67,7 @@ export default function Page() {
     }
 
     const getPenjualan = async() => {
-        const res = await fetch('/api/penjualan/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/penjualan/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ export default function Page() {
     }
 
     const getItems = async() => {
-        const res = await fetch('/api/items/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/items/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -88,7 +88,7 @@ export default function Page() {
         setDataItems(data.response.data)
     }
     const insertPenjualan = async() => {
-        const res = await fetch('/api/penjualan/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/penjualan/datahandler', {
             method: 'POST',
             headers: {
                 "Content-Type":"application/json"
@@ -101,12 +101,11 @@ export default function Page() {
             })
         })
 
-        const data = await res.json()
-        console.log(data)
+        await res.json()
     }
 
     const insertDetailPenjualan = async() =>{
-        const res = await fetch('/api/penjualandetail/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/penjualandetail/datahandler', {
             method: 'POST',
             headers: {
                 "Content-Type":"application/json"
@@ -114,8 +113,7 @@ export default function Page() {
             body:JSON.stringify(keranjangBelanja)
         })
         
-        const data = await res.json()
-        console.log(data)
+        await res.json()
     }
 
     useEffect(()=>{

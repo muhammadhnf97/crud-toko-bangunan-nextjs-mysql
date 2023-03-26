@@ -29,19 +29,18 @@ export default function Page () {
     const [isDelete, setIsDelete] = useState(false)
 
     const getdataKonsumen = async() => {
-        const res = await fetch('/api/konsumen/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/konsumen/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         const data = await res.json()
-        console.log(data.message)
         setDataKonsumen(data.data)
     }
 
     const insertKonsumen = async() => {
-        const res = await fetch('/api/konsumen/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/konsumen/datahandler',{
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'
@@ -55,8 +54,6 @@ export default function Page () {
         })
 
         const data = await res.json()
-        console.log(data.message)
-        console.log(data.returnData)
         setDataKonsumen(prev=>{
             return [{
                 idpelanggan: data?.returnData?.idpelanggan,
@@ -69,7 +66,7 @@ export default function Page () {
     
 
     const updateKonsumen = async() => {
-        const res = await fetch('/api/konsumen/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/konsumen/datahandler',{
             method: 'PUT',
             headers: {
                 'Content-Type':'application/json'
@@ -83,7 +80,6 @@ export default function Page () {
         })
 
         const data = await res.json()
-        console.log(data.message)
         setDataKonsumen(prev=>{
             return prev.map(updateKonsumen => {
                 if(updateKonsumen.idpelanggan === data.returnData.idpelanggan){
@@ -101,7 +97,7 @@ export default function Page () {
     }
 
     const deleteKonsumen = async() => {
-        const res = await fetch('/api/konsumen/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/konsumen/datahandler', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

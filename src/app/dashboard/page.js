@@ -6,16 +6,16 @@ import { formatter } from "@/lib/lib"
 export default function Dashboard(){
     const [items, setItems] = useState([])
     
-    const totalStock = items.reduce((accumulator, currentValue)=>{
+    const totalStock = items?.reduce((accumulator, currentValue)=>{
         return accumulator + currentValue.stok
     },0)
     
-    const totalAset = items.reduce((accumulator, currentValue)=>{
+    const totalAset = items?.reduce((accumulator, currentValue)=>{
         return accumulator + currentValue.hrg_satuan
     },0)
     
     const getItems = async() => {
-        const res = await fetch('/api/dashboard/items',{
+        const res = await fetch('http://hanifdeveloper.site/api/dashboard/items',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ export default function Dashboard(){
             <div className="p-1 flex flex-warp gap-5 justify-center">
                 <Card
                 title={'Total Items'}
-                items={items.length} 
+                items={items?.length} 
                 borderColor={'border-red-500'} />
                 <Card 
                 title={'Total Aset'}

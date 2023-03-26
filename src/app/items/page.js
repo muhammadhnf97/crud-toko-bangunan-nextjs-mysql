@@ -27,7 +27,7 @@ export default function Items () {
     const [currentPage, setCurrentPage] = useState(1)
     const [itemsPerPage] = useState(15)
 
-    const totalPages = Math.ceil(items.length / itemsPerPage)
+    const totalPages = Math.ceil(items?.length / itemsPerPage)
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
     let no = 0
@@ -35,7 +35,7 @@ export default function Items () {
     const [listKategori, setListKategori] = useState([])
 
     const getKategori = async() => {
-        const res = await fetch('/api/kategori/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/kategori/datahandler',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -47,7 +47,7 @@ export default function Items () {
     }
     
     const getItems = async() => {
-        const res = await fetch('/api/items/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/items/datahandler',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ export default function Items () {
     }
 
     const insertItems = async() => {
-        const res = await fetch('/api/items/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/items/datahandler',{
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'
@@ -92,7 +92,7 @@ export default function Items () {
 
     
     const deleteItem = async() => {
-        const res = await fetch('/api/items/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/items/datahandler', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -108,7 +108,7 @@ export default function Items () {
     }
 
     const updateItem = async() => {
-        const res = await fetch('/api/items/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/items/datahandler',{
             method: 'PUT',
             headers: {
                 'Content-Type':'application/json'
@@ -181,7 +181,7 @@ export default function Items () {
 
     const handleSubmitSearch = (e) => {
         e.preventDefault()
-        setItems(items.filter(data=>data.nm_barang.toLowerCase().includes(search.toLowerCase())))
+        setItems(items?.filter(data=>data.nm_barang.toLowerCase().includes(search.toLowerCase())))
     }
     const handleChangeSearch = (e) => {
         setSearch(e.target.value)
@@ -196,7 +196,7 @@ export default function Items () {
         if(tipe === 'edit'){
             setGetId(idbarang)
             setAksi('Edit')
-            setAddItems(items.find(data=>data.idbarang == idbarang))
+            setAddItems(items?.find(data=>data.idbarang == idbarang))
         } 
 
         if(tipe === 'tambah'){
@@ -304,7 +304,7 @@ export default function Items () {
             <ModalConfirm
             page={page}
             aksi={aksi}
-            value={addItems.nm_barang}
+            value={addItems?.nm_barang}
             handleClickConfirmDelete={handleClickConfirmDelete}
             handleClickConfirmActionDelete={handleClickConfirmActionDelete} />
         }
@@ -336,7 +336,7 @@ export default function Items () {
             </thead>
             <tbody className="">
                 {
-                items.map((item, index)=>{
+                items?.map((item, index)=>{
                     no = no + 1
                     return(
                         <tr key={item.idbarang} className={`leading-loose group ${index % 2 === 0 ? 'bg-violet-50' : 'bg-white'} `}>

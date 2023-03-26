@@ -59,7 +59,7 @@ export default function Page() {
     }
 
     const getSupplier = async() => {
-        const res = await fetch('/api/supplier/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/supplier/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -70,7 +70,7 @@ export default function Page() {
     }
 
     const getPembelian = async() => {
-        const res = await fetch('/api/pembelian/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/pembelian/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ export default function Page() {
     }
 
     const getItems = async() => {
-        const res = await fetch('/api/items/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/items/datahandler', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -92,7 +92,7 @@ export default function Page() {
     }
 
     const insertPembelian = async() => {
-        const res = await fetch('/api/pembelian/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/pembelian/datahandler', {
             method: 'POST',
             headers: {
                 "Content-Type":"application/json"
@@ -106,11 +106,10 @@ export default function Page() {
         })
 
         const data = await res.json()
-        console.log(data.valuesUpdateItems)
     }
 
     const insertDetailPembelian = async() =>{
-        const res = await fetch('/api/pembeliandetail/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/pembeliandetail/datahandler', {
             method: 'POST',
             headers: {
                 "Content-Type":"application/json"
@@ -118,8 +117,7 @@ export default function Page() {
             body:JSON.stringify(keranjangBelanja)
         })
         
-        const data = await res.json()
-        console.log(data)
+        await res.json()
     }
 
     useEffect(()=>{

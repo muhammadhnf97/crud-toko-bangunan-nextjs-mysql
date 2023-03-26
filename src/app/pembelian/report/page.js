@@ -12,7 +12,7 @@ export default function Page() {
     const [search, setSearch] = useState('')
     
     const getdataTable = async() => {
-        const res = await fetch('/api/pembelian/report',{
+        const res = await fetch('http://hanifdeveloper.site/api/pembelian/report',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

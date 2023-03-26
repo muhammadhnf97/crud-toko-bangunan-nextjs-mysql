@@ -32,7 +32,7 @@ export default function Page () {
 
     
     const insertKategori = async() => {
-        const res = await fetch('/api/kategori/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/kategori/datahandler',{
             method: 'POST',
             headers: {
                 'Content-Type':'application/json'
@@ -43,8 +43,6 @@ export default function Page () {
         })
 
         const data = await res.json()
-        console.log(data.response.message)
-        console.log(data.response.returnData)
         setKategories(prev=>{
             return [{
                 nm_kategori: data?.response?.returnData?.nm_kategori,
@@ -53,19 +51,18 @@ export default function Page () {
     }
 
     const getKategori = async() => {
-        const res = await fetch('/api/kategori/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/kategori/datahandler',{
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         const data = await res.json()
-        console.log(data.response.message)
         setKategories(data.response.data)
     }
   
     const updateKategori = async() => {
-        const res = await fetch('/api/kategori/datahandler',{
+        const res = await fetch('http://hanifdeveloper.site/api/kategori/datahandler',{
             method: 'PUT',
             headers: {
                 'Content-Type':'application/json'
@@ -92,7 +89,7 @@ export default function Page () {
     }
 
     const deleteKategori = async() => {
-        const res = await fetch('/api/kategori/datahandler', {
+        const res = await fetch('http://hanifdeveloper.site/api/kategori/datahandler', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -190,7 +187,6 @@ export default function Page () {
             })
         }
     }
-    console.log(addNewKategori)
 
     useEffect(()=>{
         getKategori()
